@@ -346,7 +346,31 @@ class GRPOT2IDataset(Dataset):
     
 class GRPOT2IDatasetV2(Dataset):
     def __init__(self, data_path: str, tokenizer: transformers.PreTrainedTokenizer):
-        super(GRPOT2IDataset, self).__init__()
-        list_data_dict = json.load(open(data_path, "r"))
-        self.list_data_dict = list_data_dict
+        super(GRPOT2IDatasetV2, self).__init__()
+        self.list_data_dict = []
+        with open(data_path, "r") as f:
+            for line in f:
+                caption = line.strip()  
+                self.list_data_dict.append({"caption": caption})
         self.tokenizer = tokenizer
+
+    def __len__(self):
+        return len(self.list_data_dict)
+    
+    def __getitem__(self, i):
+        item = self.list_data_dict[i]
+        sources = [
+            [
+                {'from': 'human', 'value': '<image>'}, 
+                {'from': 'gpt', 'value': item["caption"]}
+            ]
+        ]
+        t2i_data_dict = preprocess_t2i(sources, self.tokenizer, vtokens_shape=0, p_drop_cond=0.)
+        prompt_token_ids = t2i_data_dict["input_ids"][0][0].tolist()
+        data_dict = dict(
+            prompt="<|t2i|>" + "A photo of " + item["caption"] + "<|soi|>",
+            prompt_token_ids=prompt_token_ids,
+            # 如果没有图像路径，可以将其设置为 None 或其他默认值
+            image_path=None
+        )
+        return data_dict

@@ -35,11 +35,9 @@ from open_clip import OPENAI_DATASET_MEAN, OPENAI_DATASET_STD
 from trl import GRPOTrainer, ModelConfig, ScriptArguments, TrlParser, get_peft_config
 from trl.trainer.utils import pad
 from trl.models import unwrap_model_for_generation
-import sys,os
-print(sys.path)
 from simpar.model.tokenizer.cosmos_tokenizer.networks import TokenizerConfigs
 from simpar.model.tokenizer.cosmos_tokenizer.video_lib import CausalVideoTokenizer as CosmosTokenizer
-from simpar.train.t2i_data import GRPOT2IDataset
+from simpar.train.t2i_data import GRPOT2IDataset, GRPOT2IDatasetV2
 from simpar.grpo.configs import GRPOConfig
 from simpar.grpo.utils.callbacks import get_callbacks
 from simpar.grpo.utils.wandb_logging import init_wandb_training
@@ -452,8 +450,8 @@ def main(script_args, training_args, model_args):
 
 
     # Load the dataset
-    dataset = GRPOT2IDataset(data_path=script_args.data_path, tokenizer=tokenizer)
-
+    dataset = GRPOT2IDatasetV2(data_path=script_args.data_path, tokenizer=tokenizer)
+    dataset[0]
     # Get reward functions
     REWARD_FUNCS_REGISTRY = {
         "accuracy": accuracy_reward,
