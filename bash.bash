@@ -1,4 +1,4 @@
-#sft data-->已经用cosmos tokenizer处理过了，在gen_data_path中有image_path去看encode前的image_path
+#它没提供data，你自己处理好(data,prompt)后放进来处理
 torchrun \
 --nnodes=1 --nproc_per_node=8 \
 simpar/data/extract_token.py \
@@ -17,7 +17,7 @@ torchrun \
     --nproc_per_node=8 \
     llava/train/train_mem.py \
     --deepspeed scripts/zero3.json \
-    --model_name_or_path "/path_to_your_dir/Qwen2.5-0.5B-Instruct" \
+    --model_name_or_path "/home/v-haodongli/SimpleAR/checkpoints/Qwen2.5-0.5B-Instruct" \
     --version "qwen_1_5" \
     --gen_data_path /path_to_annotation_file \
     --gen_image_folder "" \

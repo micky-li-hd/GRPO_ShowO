@@ -32,12 +32,12 @@ import open_clip
 from hpsv2.src.open_clip import create_model_and_transforms, get_tokenizer
 from open_clip import OPENAI_DATASET_MEAN, OPENAI_DATASET_STD
 
-from trl import GRPOTrainer, ModelConfig, ScriptArguments, TrlParser, get_peft_config
-from trl.trainer.utils import pad
-from trl.models import unwrap_model_for_generation
+from trl.trl import GRPOTrainer, ModelConfig, ScriptArguments, TrlParser, get_peft_config
+from trl.trl.trainer.utils import pad
+from trl.trl.models import unwrap_model_for_generation
 
-from simpar.model.multimodal_encoder.cosmos_tokenizer.networks import TokenizerConfigs
-from simpar.model.multimodal_encoder.cosmos_tokenizer.video_lib import CausalVideoTokenizer as CosmosTokenizer
+from simpar.model.tokenizer.cosmos_tokenizer.networks import TokenizerConfigs
+from simpar.model.tokenizer.cosmos_tokenizer.video_lib import CausalVideoTokenizer as CosmosTokenizer
 from simpar.train.t2i_data import GRPOT2IDataset
 from simpar.grpo.configs import GRPOConfig
 from simpar.grpo.utils.callbacks import get_callbacks
