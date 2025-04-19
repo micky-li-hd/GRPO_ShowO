@@ -343,3 +343,10 @@ class GRPOT2IDataset(Dataset):
             image_path=item["image_path"]
         )
         return data_dict
+    
+class GRPOT2IDatasetV2(Dataset):
+    def __init__(self, data_path: str, tokenizer: transformers.PreTrainedTokenizer):
+        super(GRPOT2IDataset, self).__init__()
+        list_data_dict = json.load(open(data_path, "r"))
+        self.list_data_dict = list_data_dict
+        self.tokenizer = tokenizer

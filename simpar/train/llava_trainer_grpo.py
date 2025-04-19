@@ -32,10 +32,11 @@ import open_clip
 from hpsv2.src.open_clip import create_model_and_transforms, get_tokenizer
 from open_clip import OPENAI_DATASET_MEAN, OPENAI_DATASET_STD
 
-from trl.trl import GRPOTrainer, ModelConfig, ScriptArguments, TrlParser, get_peft_config
-from trl.trl.trainer.utils import pad
-from trl.trl.models import unwrap_model_for_generation
-
+from trl import GRPOTrainer, ModelConfig, ScriptArguments, TrlParser, get_peft_config
+from trl.trainer.utils import pad
+from trl.models import unwrap_model_for_generation
+import sys,os
+print(sys.path)
 from simpar.model.tokenizer.cosmos_tokenizer.networks import TokenizerConfigs
 from simpar.model.tokenizer.cosmos_tokenizer.video_lib import CausalVideoTokenizer as CosmosTokenizer
 from simpar.train.t2i_data import GRPOT2IDataset
@@ -56,7 +57,14 @@ from simpar.grpo.rewards import (
     aesthetic_reward,
     hps_reward,
 )
-
+import debugpy
+try:
+    # 5678 is the default attach port in the VS Code debug configurations. Unless a host and port are specified, host defaults to 127.0.0.1
+    debugpy.listen(("localhost", 9501))
+    print("Waiting for debugger attach")
+    debugpy.wait_for_client()
+except Exception as e:
+    pass
 
 logger = logging.getLogger(__name__)
 
@@ -354,14 +362,14 @@ class GRPOScriptArguments(ScriptArguments):
     )
 
     vq_model_ckpt: str = field(
-        default="/path_to_tokenizer/Cosmos-1.0-Tokenizer-DV8x16x16"
+        default="/home/v-haodongli/SimpleAR/checkpoints/Cosmos-1.0-Tokenizer-DV8x16x16"
     )
 
     clip_model_ckpt: str = field(
-        default="/path_to_clip/vit_large_patch14_clip_224.openai"
+        default="/home/v-haodongli/SimpleAR/checkpoints/CLIP-ViT-H-14-laion2B-s32B-b79K"
     )
     aest_model_ckpt: str = field(
-        default="/path_to_aesthetic/aesthetic-predictor/sa_0_4_vit_l_14_linear.pth"
+        default="/home/v-haodongli/SimpleAR/checkpoints/sa_0_4_vit_l_14_linear.pth"
     )
 
 
@@ -407,6 +415,8 @@ def main(script_args, training_args, model_args):
     ################
     # Load tokenizer
     ################
+
+    #这个地方我不是很理解，model_args.model_name_or_path：'checkpoints/Qwen2.5-0.5B-Instruct'，这个地方不是要用cosmos做吗
     tokenizer = AutoTokenizer.from_pretrained(model_args.model_name_or_path, use_fast=False)
 
     # Load VQ model
