@@ -450,6 +450,7 @@ def main(script_args, training_args, model_args):
     clip_model = clip_model.to("cuda")
     clip_model.eval()
 
+
     # Load the dataset
     dataset = GRPOT2IDataset(data_path=script_args.data_path, tokenizer=tokenizer)
 
