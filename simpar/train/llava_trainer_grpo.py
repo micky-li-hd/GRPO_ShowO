@@ -100,6 +100,7 @@ class LLaVAGRPOTrainer(GRPOTrainer):
         transformed_images = [img.cpu() for img in transformed_images]
         image_features = [feat.cpu() for feat in image_features]
         
+        
         # # 保存图片到本地根目录
         # for i, img_tensor in enumerate(generated_images):
         #     # 确保张量的形状为 [C, H, W]
