@@ -62,7 +62,8 @@ try:
     debugpy.wait_for_client()
 except Exception as e:
     pass
-
+from torchvision.transforms import ToPILImage
+import torchvision.utils as vutils
 logger = logging.getLogger(__name__)
 
 
@@ -99,11 +100,13 @@ class LLaVAGRPOTrainer(GRPOTrainer):
         transformed_images = [img.cpu() for img in transformed_images]
         image_features = [feat.cpu() for feat in image_features]
         
-        # 保存图片到本地根目录
-        to_pil = ToPILImage()
-        for i, img_tensor in enumerate(generated_images):
-            img = to_pil(img_tensor.cpu().byte().permute(1, 2, 0))  # 转换为 PIL 图像
-            img.save(f"/generated_image_{i}.png")  # 保存到根目录
+        # # 保存图片到本地根目录
+        # for i, img_tensor in enumerate(generated_images):
+        #     # 确保张量的形状为 [C, H, W]
+        #     if img_tensor.dim() == 3 and img_tensor.shape[0] == 3:
+        #         vutils.save_image(img_tensor.cpu(), f"/generated_image_{i}.png")
+        #     else:
+        #         raise ValueError(f"Invalid tensor shape for image saving: {img_tensor.shape}")
         return transformed_images, image_features
 
     # def _generate_and_score_completions(
